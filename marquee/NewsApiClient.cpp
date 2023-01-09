@@ -158,6 +158,8 @@ String NewsApiClient::cleanText(String text) {
   text.replace("`", "'");
   text.replace("‘", "'");
   text.replace("„", "'");
+  text.replace("«", "'");
+  text.replace("»", "'");
   text.replace("\\\"", "'");
   text.replace("•", "-");
   text.replace("é", "e");
@@ -171,6 +173,7 @@ String NewsApiClient::cleanText(String text) {
   text.replace("î", "i");
   text.replace("ï", "i");
   text.replace("ô", "o");
+  text.replace("ğ", "g"); // Used in e.g. "Erdoğan"
   text.replace("…", "...");
   text.replace("–", "-");
   text.replace("Â", "A");
@@ -194,5 +197,6 @@ String NewsApiClient::cleanText(String text) {
   text.replace("ß", "ss");
   text.replace("»", "'");
   text.replace("«", "'");
+  
   return text;
 }

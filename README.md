@@ -1,5 +1,8 @@
 # Marquee Scroller (Clock, Weather, News, and More)
 
+| :exclamation: This is just a fork with a small patch to use german translation for dates and weather. |
+|-------------------------------------------------------------------------------------------------------|
+
 ## NOTICE
 The latest version of Marquee Scroller 3.01 works with **ESP8266 Core 3.0.2** -- if you are upgrading from Marquee Scroller 2.X version this may require you to enter in all your API Keys and settings.  Always meake sure you have coppied all your API keys somewhere before updating.  The ESP8266 Core 3.0.2 uses the newer FS (file system) that may require a fresh start on the configuration.
 Make sure you update to the latest version of WifiManager library (link below).

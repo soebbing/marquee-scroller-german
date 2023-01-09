@@ -56,7 +56,7 @@ class NewsApiClient: public JsonListener {
     String getTitle(int index);
     String getDescription(int index);
     String getUrl(int index);
-    String cleanText(String text);
+    static String cleanText(String text);
     
     virtual void whitespace(char c);
     virtual void startDocument();

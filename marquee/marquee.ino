@@ -27,9 +27,9 @@
 
 #include "Settings.h"
 
-#define VERSION "3.03"
+#define VERSION "3.03d"
 
-#define HOSTNAME "CLOCK-"
+#define HOSTNAME "UHR-"
 #define CONFIG "/conf.txt"
 #define BUZZER_PIN  D2
 
@@ -51,7 +51,7 @@ int8_t getWifiQuality();
 // LED Settings
 const int offset = 1;
 int refresh = 0;
-String message = "hello";
+String message = "hallo";
 int spacer = 1;  // dots between letters
 int width = 5 + spacer; // The font width is 5 pixels + spacer
 Max72xxPanel matrix = Max72xxPanel(pinCS, numberOfHorizontalDisplays, numberOfVerticalDisplays);
@@ -239,7 +239,7 @@ void setup() {
 
   Serial.println("matrix created");
   matrix.fillScreen(LOW); // show black
-  centerPrint("hello");
+  centerPrint("hallo");
 
   tone(BUZZER_PIN, 415, 500);
   delay(500 * 1.3);
@@ -338,7 +338,7 @@ void setup() {
     scrollMessage(" v" + String(VERSION) + "  IP: " + WiFi.localIP().toString() + "  ");
   } else {
     Serial.println("Web Interface is Disabled");
-    scrollMessage("Web Interface is Disabled");
+    scrollMessage("Web Interface ist deaktiviert");
   }
 
   flashLED(1, 500);
@@ -382,40 +382,39 @@ void loop() {
     if (displayRefreshCount <= 0) {
       displayRefreshCount = minutesBetweenScrolling;
       String temperature = weatherClient.getTempRounded(0);
-      String description = weatherClient.getDescription(0);
-      description.toUpperCase();
+      String description = NewsApiClient::cleanText(weatherClient.getDescription(0));
+
       String msg;
       msg += " ";
 
       if (SHOW_DATE) {
-        msg += TimeDB.getDayName() + ", ";
-        msg += TimeDB.getMonthName() + " " + day() + "  ";
+        msg += TimeDB.getDayName() + ", " + day() + "." + TimeDB.getMonthName() + "  ";
       }
       if (SHOW_CITY) {
-        msg += weatherClient.getCity(0) + "  ";
+        msg += weatherClient.getCity(0) + ": ";
       }
       msg += temperature + getTempSymbol() + "  ";
 
       //show high/low temperature
       if (SHOW_HIGHLOW) {
-        msg += "High/Low:" + weatherClient.getHigh(0) + "/" + weatherClient.getLow(0) + " " + getTempSymbol() + "  ";
+        msg += "Hoch/Tief: " + weatherClient.getHigh(0) + "/" + weatherClient.getLow(0) + getTempSymbol() + "  ";
       }
       
       if (SHOW_CONDITION) {
         msg += description + "  ";
       }
       if (SHOW_HUMIDITY) {
-        msg += "Humidity:" + weatherClient.getHumidityRounded(0) + "%  ";
+        msg += "Luftfeuchte: " + weatherClient.getHumidityRounded(0) + "%  ";
       }
       if (SHOW_WIND) {
-        msg += "Wind: " + weatherClient.getDirectionText(0) + " @ " + weatherClient.getWindRounded(0) + " " + getSpeedSymbol() + "  ";
+        msg += "Wind: " + weatherClient.getDirectionText(0) + " @ " + weatherClient.getWindRounded(0) + getSpeedSymbol() + "  ";
       }
       //line to show barometric pressure
       if (SHOW_PRESSURE) {
-        msg += "Pressure:" + weatherClient.getPressure(0) + getPressureSymbol() + "  ";
+        msg += "Druck: " + weatherClient.getPressure(0) + getPressureSymbol() + "  ";
       }
      
-      msg += marqueeMessage + " ";
+      msg += marqueeMessage;
       
       if (NEWS_ENABLED) {
         msg += "  " + NEWS_SOURCE + ": " + newsClient.getTitle(newsIndex) + "  ";
@@ -825,7 +824,6 @@ void handleConfigure() {
     isHighlowChecked = "checked='checked'";
   }
   form.replace("%HIGHLOW_CHECKED%", isHighlowChecked);
-
   
   String is24hourChecked = "";
   if (IS_24HOUR) {
@@ -1208,11 +1206,10 @@ String getTempSymbol(bool forWeb) {
   return rtnValue;
 }
 
-
 String getSpeedSymbol() {
   String rtnValue = "mph";
   if (IS_METRIC) {
-    rtnValue = "kph";
+    rtnValue = "km/h";
   }
   return rtnValue;
 }
@@ -1662,7 +1659,6 @@ void centerPrint(String msg, boolean extraStuff) {
       int numberOfLightPixels = (printerClient.getProgressCompletion().toFloat() / float(100)) * (matrix.width() - 1);
       matrix.drawFastHLine(0, 7, numberOfLightPixels, HIGH);
     }
-    
   }
   
   matrix.setCursor(x, 0);
